@@ -52,6 +52,8 @@ def fan_process(text):
 priority = 0
 status = 0
 
+time.sleep(3)
+
 while True:
     # Listen for speech input and convert it to text
     speech_text = recognize_speech_from_microphone()
