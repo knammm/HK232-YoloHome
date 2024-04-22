@@ -6,7 +6,7 @@ import re
 
 AIO_FEED_ID = ["fan", "led", "in-led"]
 AIO_USERNAME = "olkmphy"
-AIO_KEY = "aio_Ukvq13BJAgCESTDC6Stf9D1EfZaR"
+AIO_KEY = "aio_nPtu8489JWRI74FLwGoCysDRbnxX"
 
 
 def connected(client):
