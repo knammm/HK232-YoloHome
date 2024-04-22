@@ -54,6 +54,28 @@ status = 0
 
 time.sleep(3)
 
+LIGHT_COMMANDS = {
+    "inside": ["inside light", "in light", "light inside"],
+    "outside": ["outside light", "out light", "light outside"],
+    "both": ["both lights", "all lights", "both", "all"]
+}
+
+# Function to perform action based on speech command
+def perform_action(light, action):
+    print(f"Turning {action} the {light}...")
+    value_light = "0" if action == "off" else "1"
+
+    if light == "inside":
+        key_light = "in-led"
+        myClient.publish(key_light, value_light)
+    elif light == "outside":
+        key_light = "led"
+        myClient.publish(key_light, value_light)
+    elif light == "both":
+        myClient.publish("in-led", value_light)
+        myClient.publish("led", value_light)
+
+
 while True:
     # Listen for speech input and convert it to text
     speech_text = recognize_speech_from_microphone()
@@ -65,12 +87,13 @@ while True:
             status = 1
             priority = 1
 
-        elif speech_text.lower() == "turn off the light":
-            speak("Which light, master?")
-            status = 0
-            priority = 1
+        for light, commands in LIGHT_COMMANDS.items():
+            for command in commands:
+                if command in speech_text.lower():
+                    action = "on" if "turn on" in speech_text else "off"
+                    perform_action(light, action)
 
-        elif "turn on the fan at" in speech_text.lower():
+        if "turn on the fan at" in speech_text.lower():
             percentage = fan_process(speech_text.lower())
             percentage = percentage[0:len(percentage) - 1]
             percentage = int(percentage)
