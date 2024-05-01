@@ -91,7 +91,7 @@ while True:
             authenticated = face_auth()
             if authenticated:
                 print(f"Authenticated...")
-                myClient.publish("authentication", "True")
+                myClient.publish("authentication", "true")
             else:
                 print(f"Fail to authenticate...")
         # Check if the phrase "Turn on the light" is detected
