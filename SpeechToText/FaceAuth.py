@@ -1,4 +1,6 @@
 import threading
+import time
+
 import cv2
 from deepface import DeepFace
 from SpeechToTextAssistant import *
@@ -29,14 +31,26 @@ def face_auth_process(frame):
         face_match = False
 
 
+
+
 def face_auth():
     global face_match
     face_match = False
     counter = 0
+    timeout = 15
+    flag = [0]
     print(f"Authenticating by face ID...")
+
+    # Timer thread function
+    def timer_thread(t_flag):
+        time.sleep(timeout)
+        t_flag[0] = 1
+
+    # Start timer thread
+    timer_thread = threading.Thread(target=timer_thread, args=(flag,))
+    timer_thread.start()
     while True:
         ret, frame = cap.read()
-
         if ret:
             if counter % 30 == 0:
                 try:
@@ -54,6 +68,8 @@ def face_auth():
             else:
                 cv2.putText(frame, "NO MATCH!", (20, 450), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 3)
                 cv2.imshow('video', frame)
+                if flag[0] == 1:
+                    break
 
         key = cv2.waitKey(1)
         if key == ord('q'):
