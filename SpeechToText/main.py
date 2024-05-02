@@ -1,6 +1,7 @@
 import sys
 from Adafruit_IO import MQTTClient
 import time
+from FaceAuth import face_auth
 from SpeechToTextAssistant import *
 import re
 
@@ -27,6 +28,7 @@ def disconnected(client):
 def message(client, feed_id, payload):
     print("Receive Data from: " + feed_id + "_" + payload)
 
+
 # Connect to Adafruit
 myClient = MQTTClient(AIO_USERNAME, AIO_KEY)
 myClient.on_connect = connected
@@ -35,6 +37,7 @@ myClient.on_message = message
 myClient.on_subscribe = subscribe
 myClient.connect()
 myClient.loop_background()
+
 
 def fan_process(text):
     # Define a regular expression pattern to match percentage values
@@ -49,6 +52,7 @@ def fan_process(text):
     else:
         return "0%"
 
+
 priority = 0
 status = 0
 
@@ -59,6 +63,7 @@ LIGHT_COMMANDS = {
     "outside": ["outside light", "out light", "light outside"],
     "both": ["both lights", "all lights", "both", "all"]
 }
+
 
 # Function to perform action based on speech command
 def perform_action(light, action):
@@ -81,6 +86,14 @@ while True:
     speech_text = recognize_speech_from_microphone()
 
     if priority == 0:
+        # Check if the phrase "Face ID" is detected
+        if speech_text.lower() == "face id":
+            authenticated = face_auth()
+            if authenticated:
+                print(f"Authenticated...")
+                myClient.publish("authentication", "true")
+            else:
+                print(f"Fail to authenticate...")
         # Check if the phrase "Turn on the light" is detected
         if speech_text.lower() == "turn on the light":
             speak("Which light, master?")
@@ -102,9 +115,11 @@ while True:
             elif percentage < 0:
                 percentage = 0
             percentage = str(percentage)
+            print(f"Turning on the fan at {percentage}...")
             myClient.publish("fan", percentage)
 
         elif speech_text.lower() == "turn off the fan":
+            print(f"Turning off the fan...")
             myClient.publish("fan", 0)
     else:
         if "all" in speech_text.lower():

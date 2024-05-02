@@ -4,6 +4,7 @@ import pygame
 import tempfile
 import os
 
+
 def recognize_speech_from_microphone():
     # Initialize recognizer
     recognizer = sr.Recognizer()
@@ -28,6 +29,7 @@ def recognize_speech_from_microphone():
         print(f"Sorry, there was an error accessing the Google Web Speech API: {e}")
 
     return ""
+
 
 def speak(text):
     # Initialize gTTS
