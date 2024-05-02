@@ -6,7 +6,7 @@ from SpeechToTextAssistant import *
 import re
 import requests
 
-AIO_FEED_ID = ["fan", "led", "in-led"]
+AIO_FEED_ID = ["fan", "led", "in-led", "announcement"]
 AIO_USERNAME = "olkmphy"
 AIO_KEY = "aio_nPtu8489JWRI74FLwGoCysDRbnxX"
 
@@ -28,9 +28,9 @@ def disconnected(client):
 
 def message(client, feed_id, payload):
     print(f"Received value {payload} from topic {feed_id}")
-    if feed_id == "possible_thief" and payload == "true":
+    if feed_id == "announcement" and payload == "true":
         # Call API
-        response = requests.get("https://dadn-lfffimm82-namhoanggs-projects.vercel.app/api/notify/door")
+        response = requests.get("https://dadn.vercel.app/api/notify/door")
         if response.status_code == 200:
             print("API call successful.")
         else:
