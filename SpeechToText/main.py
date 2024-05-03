@@ -4,6 +4,7 @@ import time
 from FaceAuth import face_auth
 from SpeechToTextAssistant import *
 import re
+import requests
 
 AIO_FEED_ID = ["fan", "led", "in-led"]
 AIO_USERNAME = "olkmphy"
@@ -26,7 +27,15 @@ def disconnected(client):
 
 
 def message(client, feed_id, payload):
-    print("Receive Data from: " + feed_id + "_" + payload)
+    print(f"Received value {payload} from topic {feed_id}")
+    if feed_id == "possible_thief" and payload == "true":
+        # Call API
+        response = requests.get("https://dadn-lfffimm82-namhoanggs-projects.vercel.app/api/notify/door")
+        if response.status_code == 200:
+            print("API call successful.")
+        else:
+            print("API call failed. Status code:", response.status_code)
+
 
 
 # Connect to Adafruit
