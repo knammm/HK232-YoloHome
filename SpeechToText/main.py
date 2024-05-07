@@ -96,7 +96,7 @@ while True:
 
     if priority == 0:
         # Check if the phrase "Face ID" is detected
-        if speech_text.lower() == "face id":
+        if speech_text.lower() == "turn on the camera":
             authenticated = face_auth()
             if authenticated:
                 print(f"Authenticated...")
